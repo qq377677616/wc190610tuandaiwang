@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection"content="telephone=no, email=no" />
+    <title>领“猪宝”，送“猪福”</title>
+    <link href="./images/logos.ico" type="image/x-icon" rel="shortcut icon">
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/animate.min.css" />
+    <link rel="stylesheet" href="./css/swiper.min.css" /> 
+    <link rel="stylesheet" href="./css/default.css" />
+    <script src="./js/jquery-3.3.1.js"></script>
+    <!-- <script src="./js/jweixin-1.2.0.js"></script> -->
+    <!-- <script src="https://game.flyh5.cn/game/twolevel_autho/share.php?type=js&auth_appid=wx7c3ed56f7f792d84"></script> -->
+    <!-- <script src="https://game.flyh5.cn/game/xiyouji_jssdk/twolevel_autho/share.php?auth_appid=wx1da84b6515b921cd&type=js&isonlyopenid=true"></script> -->
+    <script src="./js/fitremtaobao.js"></script>
+    <script src="./js/vconsole.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <ul @click.once="playPauseBg(1, true)">
+    <!-- <ul> -->
+      <!-- loading加载页 -->
+      <li class="loading flex-cen" v-show="curPageIndex == 0">
+        <div class="loading-box">
+          <div class="loading-img flex-cen">
+            <img v-for="(item, index) in 6" :src="'./images/loading/loading_' + (item + 1) + '.png'" v-show="curLoingIndex == index" alt="" />
+          </div>
+          <div class="loading-progress">
+            <div class="text flex-cen">
+              <img src="./images/loading/loading_8.png" alt="" />
+              <div class="points flex">
+                <img src="./images/loading/loading_9.png" alt="" v-show="curLoingIndex > 0"/>
+                <img src="./images/loading/loading_9.png" alt="" v-show="curLoingIndex > 2" />
+                <img src="./images/loading/loading_9.png" alt="" v-show="curLoingIndex > 4" />
+              </div>
+            </div>
+            <div class="progress">
+              <div class="progress-box-con" :style="{width:'calc('+progress+'% - .06rem)'}"></div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <!-- 音乐和按钮 -->
+      <li class="music-controls">
+        <div class="controls">
+          <div class="backPage btn" v-show="curPageIndex > 1 && !isSharePage" @click="prevPage"></div>
+          <!-- <div class="musicBtn btn" id="bgcontrols" v-show="curPageIndex > 0" @click="backPlayPause"> -->
+          <div class="musicBtn btn" id="bgcontrols" v-show="curPageIndex > 0" @click.stop>
+            <img src="./images/icon_02.png" alt="" />
+            <img src="./images/icon_02s.png" alt="" />
+          </div>
+        </div>
+        <div class="music">
+          <audio id="myAudio" src="./images/sound_04.mp3" autoplay="autoplay" loop ></audio>
+          <audio id="music02" src="./images/sound_01.mp3" preload="auto" loop ></audio>
+          <audio id="music03" src="./images/sound_02.mp3" preload="auto" loop ></audio>
+          <audio id="music04" src="./images/sound_03.mp3" preload="auto" loop ></audio>
+          <audio id="music05" src="./images/sound_04.mp3" preload="auto" loop ></audio>
+          <audio id="voice" :src="voiceSrc" preload="auto"></audio>
+        </div>
+        <div class="audio-controls">
+          <div id="controls1"></div>
+          <div id="controls2"></div>
+          <div id="controls3"></div>
+          <div id="controls4"></div>
+          <div id="controls5"></div>
+        </div>
+      </li>
+      <!-- 首页 -->      
+      <transition :name="transitionType"><li class="page1 page" v-show="curPageIndex == 1" v-swipeup="swipeup">
+        <div class="logo"><img src="./images/home/index_9.png" alt="" /></div>
+        <div class="con">
+          <div class="con-top">
+            <img src="./images/home/index_3.png" alt="" />
+            <div class="year">
+              <img src="./images/home/index_4.png" alt="" />
+              <img src="./images/home/index_5.png" alt="" />
+              <img src="./images/home/index_6.png" alt="" />
+              <img src="./images/home/index_7.png" alt="" />
+            </div>
+          </div>
+          <div class="con-center">
+            <img src="./images/home/index_2.png" alt="" />
+          </div>
+          <div class="con-bottom">
+            <img src="./images/home/index_1.png" alt="" />
+          </div>
+        </div>
+      </li></transition>
+      <!-- 选择猪崽页 -->
+      <transition :name="transitionType"><li class="page2 page" v-show="curPageIndex == 2">
+        <div class="logo"><img src="./images/home/index_9.png" alt="" /></div>
+        <div class="con">
+          <div class="con-top"><img :src="'./images/select/title_0'+curPingIndex+'.png'" alt="" /></div>
+          <div class="con-cen">
+            <div class="swiper-container">
+              <dl class="swiper-wrapper">
+                <dd class="swiper-slide">
+                  <img src="./images/gif_01.gif" alt="" />
+                </dd>
+                <dd class="swiper-slide">
+                  <img src="./images/gif_02.gif" alt="" />
+                </dd>
+                <dd class="swiper-slide">
+                  <img src="./images/gif_03.gif" alt="" />
+                </dd>
+                <dd class="swiper-slide">
+                  <img src="./images/gif_04.gif" alt="" />
+                </dd>
+                <dd class="swiper-slide">
+                  <img src="./images/gif_05.gif" alt="" />
+                </dd>
+                <dd class="swiper-slide">
+                  <img src="./images/gif_06.gif" alt="" />
+                </dd>
+              </dl>
+              <div class="swiper-button-prev btn"></div>
+              <div class="swiper-button-next btn"></div>
+            </div>
+          </div>
+          <div class="con-bottom" @click="nextPage">
+            <img src="./images/select/page1_52_btn.png" alt="" />
+          </div>
+        </div>
+      </li></transition>
+      <!-- 录音页面 -->
+      <transition :name="transitionType"><li class="page3 page" v-show="curPageIndex == 3">
+        <div class="logo"><img src="./images/home/index_9.png" alt="" /></div>
+        <div class="con">
+          <div class="con-top">
+            <!-- <img v-for="item in 24" v-show="effectCurindex == item" :src="'./images/effect/pig'+curPingIndex+'/animation'+curPingIndex+'_'+(item < 10 ? '0' + item : item)+'.png'" alt="" /> -->
+            <img :src="'./images/gif_0'+curPingIndex+'.gif'" alt="" />
+          </div>
+          <div id="con-canvas">
+            <div id="code"></div>
+            <canvas id="canvas"></canvas>
+          </div>
+          <div class="con-center">
+            <div class="btn">
+              <div class="start" @click="soundRecording_start">
+                <img src="./images/voice/page7_10_btn.png" alt="" v-show="btnStatus[0] == 1"/>
+                <img src="./images/voice/page7_12_btn.png" alt="" v-show="btnStatus[0] == 0"/>
+              </div>
+              <div class="end" @click="soundRecording_stop">
+                <img src="./images/voice/page7_11_btn.png" alt="" v-show="btnStatus[1] == 1"/>
+                <img src="./images/voice/page7_13_btn.png" alt="" v-show="btnStatus[1] == 0"/>
+              </div>
+            </div>
+            <div class="voice-pro">
+              <h3 v-show="parseInt(curPro * .6) > 0">{{parseInt(curPro * .6)}}"</h3>
+              <div class="pro"><div class="pro-box" :style="{width: curPro + '%'}"></div></div>
+            </div>
+            <div class="sound-effects">
+              <dl class="flex-cen">
+                <dd :class="[btnStatus[2] == 1 ? 'on' : '']" @click="selectVoice(1)">
+                  <img src="./images/voice/page7_21.png" alt="" />
+                  <img src="./images/voice/page7_16.png" alt="" />
+                </dd>
+                <dd :class="[btnStatus[2] == 2 ? 'on' : '']" @click="selectVoice(2, './images/music_01.mp3')">
+                  <img src="./images/voice/page7_22.png" alt="" />
+                  <img src="./images/voice/page7_17.png" alt="" />
+                </dd>
+                <dd :class="[btnStatus[2] == 3 ? 'on' : '']" @click="selectVoice(3, './images/music_02.mp3')">
+                  <img src="./images/voice/page7_23.png" alt="" />
+                  <img src="./images/voice/page7_18.png" alt="" />
+                </dd>
+                <dd :class="[btnStatus[2] == 4 ? 'on' : '']" @click="selectVoice(4, './images/music_03.mp3')">
+                  <img src="./images/voice/page7_24.png" alt="" />
+                  <img src="./images/voice/page7_19.png" alt="" />
+                </dd>
+                <dd :class="[btnStatus[2] == 5 ? 'on' : '']" @click="selectVoice(5, './images/music_04.mp3')">
+                  <img src="./images/voice/page7_20.png" alt="" /> 
+                  <img src="./images/voice/page7_15.png" alt="" />
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <div class="con-bottom flex-cen">
+            <img src="./images/voice/page7_25_btn.png" alt="" @click="reRecording"/>
+            <img src="./images/voice/page7_26_btn.png" alt="" @click="preservation"/>
+          </div>
+        </div>
+      </li></transition>
+      <!-- 生成祝福语 -->
+      <transition :name="transitionType"><li class="page4 page" v-show="curPageIndex == 4">
+        <div class="logo"><img src="./images/home/index_9.png" alt="" /></div>
+        <div class="con">
+          <div class="con-top">
+            <img :src="'./images/gif_0'+curPingIndex+'.gif'" alt="" />
+          </div>
+          <img id="canvasImg" :src="canvasImgUrl" alt="" />
+          <div class="con-center">
+            <div class="one flex-cen">
+              <div class="headPortrait"><img :src="isShowFriend ? friendInfo.head_url : userInfo.head_url" alt="" /></div>
+              <div :class="['voice', isPlayinag ? 'on' : '']" @click="playVoice">
+                <div class="icon"><img src="./images/generate/page8_18.png" alt="" /></div>
+                <div class="point"><span></span></div>
+                <div class="times">{{ isShowFriend ? friendInfo.dur : parseInt(curPro * .6)}}"</div>
+              </div>
+            </div>
+            <div class="two">{{isShowFriend ? friendInfo.nickname : userInfo.nickname}}</div>
+            <div class="three">
+              <img v-for="item in 6" :src="'./images/generate/page8_'+ (item+7) +'.png'" v-show="item == curPingIndex" alt="" />
+            </div>
+          </div>
+          <div class="con-bottom flex-cen">
+            <template v-if="!isSharePage">
+              <div class="img" @click="reEdit"><img src="./images/generate/page8_5_btn.png" alt="" /></div>
+              <div class="img" @click="shareHaze"><img src="./images/generate/page8_6_btn.png" alt="" /></div>
+            </template>
+            <template v-else>
+              <div class="img give" @click="newGame"><img src="./images/generate/page8_34_btn.png" alt=""/></div>
+            </template>
+          </div>
+          <div class="h3" v-show="!isShowFriend"><img src="./images/generate/page8_4.png" alt="" /></div>
+          <div class="haze" v-show="isShare" @click="shareHaze"><img src="./images/share/page8_33.png" alt="" /></div>
+        </div>
+      </li></transition>
+      <!-- 提示框 -->
+      <transition name="fadeInOut"><li class="page flex-cen totast" v-show="totast[1]==1" @click="closeTotast(false)">
+        <div class="totast-box title">
+          <img src="./images/loading.gif" v-show="totast[0]>=1">
+          <p class="desc" v-show="totast[0]!=1">{{totast[2]}}</p>
+        </div>
+      </li></transition>
+    </ul> 
+  </div>     
+  <script src="./js/bgmusic.js"></script>
+  <!-- <script src="./js/wechatShart.js"></script> -->
+  <script src="./js/vue.js"></script>
+  <script src="./js/vueTouch.js"></script>
+  <script src="./js/fastclick.js"></script>
+  <script src="./js/swiper.min.js"></script>
+  <script src="./js/qrcode.min.js"></script>
+  <script src="./js/default.js"></script>
+  <script type="text/javascript">
+    // if (window.location.href.indexOf("localhost") == -1) { var VC = new VConsole(); }
+    document.querySelector('body').addEventListener('touchmove', function(e) {e.preventDefault();});
+    document.getElementById('app').addEventListener('touchmove', function(e) {e.preventDefault();});
+    var _mtac = {"performanceMonitor":1,"senseQuery":1};
+    (function() {
+      var mta = document.createElement("script");
+      mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+      mta.setAttribute("name", "MTAH5");
+      mta.setAttribute("sid", "500669190");
+      mta.setAttribute("cid", "500669191");
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(mta, s);
+    })();
+</script>
+</body>
+</html>
